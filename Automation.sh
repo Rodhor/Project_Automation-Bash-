@@ -136,7 +136,7 @@ github() {
 }
 
 # Parse command-line options
-while getopts "n:dgvl:h" opt; do
+while getopts "n:dgv:l:h" opt; do
   case "${opt}" in
     n)
       project_name="${OPTARG}"  # Set the project name based on the provided argument
@@ -155,16 +155,14 @@ while getopts "n:dgvl:h" opt; do
       pipenv=true # Set the pipenv flag to true
       ;;
     l)
-      if [ -z "${OPTARG}" ]; then
-        read -p "Which language will be used?: " language  # If -l is used without an argument, prompt the user for the language
-      elif [ "${OPTARG}" = "p" ] || [ "${OPTARG}" = "python" ]; then
+      if [ "${OPTARG}" = "p" ] || [ "${OPTARG}" = "P" ]|| [ "${OPTARG}" = "python" ]|| [ "${OPTARG}" = "Python" ]; then
         language="Python"  # If the argument is 'p' or 'python', set the language to 'Python'
+      elif [ "${OPTARG}" = "b" ] || [ "${OPTARG}" = "B" ]|| [ "${OPTARG}" = "bash" ]|| [ "${OPTARG}" = "Bash" ]; then
+        language="Bash" 
+      elif [ -n "${OPTARG}" ]; then
+        language="${OPTARG}"  # If 'language' is already set, update it with the provided argument
       else
-        if [ -n "$language" ]; then
-          language="${OPTARG}"  # If 'language' is already set, update it with the provided argument
-        else
-          language=""  # If 'language' is not set, set it to an empty string
-        fi
+        language=""  # If 'language' is not set, set it to an empty string
       fi
       ;;
     h)
@@ -175,6 +173,13 @@ while getopts "n:dgvl:h" opt; do
       ;;
   esac
 done
+
+# Check if the user used -l without an argument
+if [ "$OPTIND" -gt 1 ] && [ "${OPTARG}" = ":" ]; then
+  read -p "Which language will be used?: " language
+fi
+
+
 
 # Check for missing or empty required options
 if [ -z "$project_name" ]; then
