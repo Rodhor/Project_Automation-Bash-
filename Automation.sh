@@ -132,6 +132,11 @@ github() {
 
   # Set the default branch name to 'main' and push your code to the remote repository
   git branch -M main
+
+  # Add a remote named 'origin' with the correct SSH URL
+  git remote add origin git@github.com:Rodhor/"$project_name".git
+
+  # Push the code to the remote 'origin' repository
   git push -u origin main || { echo "Error: Unable to push code to the remote repository."; exit 1; }
 }
 
